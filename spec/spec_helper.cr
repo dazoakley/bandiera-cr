@@ -1,2 +1,4 @@
-require "spec"
-require "../src/bandiera"
+require "spec2"
+
+Spec2.random_order
+Spec2.doc
