@@ -187,4 +187,136 @@ Spec2.describe Bandiera::Feature do
       end
     end
   end
+
+  describe "a feature for a percentage of users" do
+    subject do
+      described_class.new(
+        name:       name,
+        active:     active,
+        percentage: percentage
+      )
+    end
+
+    context "when a feature is 'active'" do
+      let(:active) { true }
+
+      context "with 5%" do
+        let(:percentage) { 5 }
+
+        describe "#enabled?" do
+          it "returns true for ~5% of users" do
+            expect(calculate_active_count(subject, percentage)).to_be < 15
+          end
+        end
+      end
+
+      context "with 95%" do
+        let(:percentage) { 95 }
+
+        describe "#enabled?" do
+          it "returns true for ~95% of users" do
+            expect(calculate_active_count(subject, percentage)).to_be > 85
+            expect(calculate_active_count(subject, percentage)).to_be < 100
+          end
+        end
+      end
+
+      context "when no user_id is passed" do
+        let(:percentage) { 95 }
+
+        describe "#enabled?" do
+          it "returns false" do
+            expect(subject.enabled?).to eq(false)
+          end
+        end
+      end
+    end
+
+    context "when the feature is NOT 'active'" do
+      let(:active)     { false }
+      let(:percentage) { 95 }
+
+      describe "#enabled?" do
+        it "returns false" do
+          expect(calculate_active_count(subject, percentage)).to eq(0)
+        end
+      end
+    end
+  end
+
+  describe "a feature configured for both user groups and a percentage of users" do
+    subject do
+      described_class.new(
+        name:             name,
+        active:           active,
+        user_group_list:  user_group_list,
+        percentage:       percentage
+      )
+    end
+
+    context "when the feature is 'active'" do
+      let(:active) { true }
+
+      context "and the user matches on the user_group configuration" do
+        let(:user_group_list) { %w(admin editor) }
+        let(:percentage)      { 5 }
+
+        describe "#enabled?" do
+          it "returns true" do
+            expect(subject.enabled?(user_group: "admin", user_id: "12345")).to eq(true)
+          end
+        end
+      end
+
+      context "and the user does not match the user_groups, but does fall into the percentage" do
+        let(:user_group_list) { %w(admin editor) }
+        let(:percentage)      { 100 }
+
+        describe "#enabled?" do
+          it "returns true" do
+            expect(subject.enabled?(user_group: "qwerty", user_id: "12345")).to eq(true)
+          end
+        end
+      end
+
+      context "and the user matches neither the user_groups or falls into the percentage" do
+        let(:user_group_list) { %w(admin editor) }
+        let(:percentage)      { 0 }
+
+        describe "#enabled?" do
+          it "returns false" do
+            expect(subject.enabled?(user_group: "qwerty", user_id: "12345")).to eq(false)
+          end
+        end
+      end
+
+      context "when the user_group and/or user_id params are not passed" do
+        let(:user_group_list) { %w(admin editor) }
+        let(:percentage)      { 100 }
+
+        describe "#enabled?" do
+          it "returns false" do
+            expect(subject.enabled?).to eq(false)
+          end
+        end
+      end
+    end
+
+    context "when the feature is NOT 'active'" do
+      let(:active)          { false }
+      let(:user_group_list) { %w(admin editor) }
+      let(:percentage)      { 100 }
+
+      describe "#enabled?" do
+        it "returns false" do
+          expect(subject.enabled?(user_group: "admin", user_id: "12345")).to eq(false)
+        end
+      end
+    end
+  end
+
+  private def calculate_active_count(feature, _percentage)
+    (0...100).map   { |id| feature.enabled?(user_id: id.to_s) }
+             .count { |val| val == true }
+  end
 end
