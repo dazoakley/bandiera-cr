@@ -2,9 +2,22 @@ require "../spec_helper"
 require "../../src/bandiera/feature"
 
 Spectator.describe Bandiera::Feature do
-  subject { described_class.new(name: name, description: description, active: active) }
+  subject do
+    described_class.new(
+      name: name,
+      description: description,
+      active: active,
+      user_group_list: user_group_list,
+      user_group_regex: user_group_regex,
+      percentage: percentage
+    )
+  end
+
   let(name) { "feature_name" }
   let(description) { "feature description" }
+  let(user_group_list) { nil }
+  let(user_group_regex) { nil }
+  let(percentage) { nil }
 
   describe "a plain on/off feature flag" do
     describe "#enabled?" do
@@ -28,15 +41,6 @@ Spectator.describe Bandiera::Feature do
 
   describe "a feature for specific user groups" do
     context "configured as a list of groups" do
-      subject do
-        described_class.new(
-          name: name,
-          description: description,
-          active: active,
-          user_group_list: user_group_list
-        )
-      end
-
       let(user_group) { "admin" }
       let(user_group_list) { %w(admin editor) }
 
@@ -192,15 +196,6 @@ Spectator.describe Bandiera::Feature do
   end
 
   describe "a feature for a percentage of users" do
-    subject do
-      described_class.new(
-        name: name,
-        description: description,
-        active: active,
-        percentage: percentage
-      )
-    end
-
     context "when a feature is 'active'" do
       let(active) { true }
 
@@ -249,16 +244,6 @@ Spectator.describe Bandiera::Feature do
   end
 
   describe "a feature configured for both user groups and a percentage of users" do
-    subject do
-      described_class.new(
-        name: name,
-        description: description,
-        active: active,
-        user_group_list: user_group_list,
-        percentage: percentage
-      )
-    end
-
     context "when the feature is 'active'" do
       let(active) { true }
 
@@ -316,6 +301,53 @@ Spectator.describe Bandiera::Feature do
         it "returns false" do
           expect(subject.enabled?(user_group: "admin", user_id: "12345")).to eq(false)
         end
+      end
+    end
+  end
+
+  describe "#configured_for_user_groups?" do
+    let(active) { true }
+    let(user_group_list) { nil }
+    let(user_group_regex) { nil }
+
+    context "if a user_group list have been configured" do
+      let(user_group_list) { %w(boo bar) }
+
+      it "returns true" do
+        expect(subject.configured_for_user_groups?).to eq true
+      end
+    end
+
+    context "if a user_group regex have been configured" do
+      let(user_group_regex) { Regex.new(".*") }
+
+      it "returns true" do
+        expect(subject.configured_for_user_groups?).to eq true
+      end
+    end
+
+    context "if no user_group settings have been configured" do
+      it "returns false" do
+        expect(subject.configured_for_user_groups?).to eq false
+      end
+    end
+  end
+
+  describe "#configured_for_percentage?" do
+    let(active) { true }
+    let(percentage) { nil }
+
+    context "if a percentage has been configured" do
+      let(percentage) { 50 }
+
+      it "returns true" do
+        expect(subject.configured_for_percentage?).to be_true
+      end
+    end
+
+    context "if a percentage has not been configured" do
+      it "returns false" do
+        expect(subject.configured_for_percentage?).to be_false
       end
     end
   end
