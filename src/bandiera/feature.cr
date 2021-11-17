@@ -8,8 +8,8 @@ module Bandiera
     @user_group_regex : Regex
     @percentage : Int32
 
-    getter :name, :active, :user_group_list, :user_group_regex, :percentage
-    getter? :active
+    getter name, active, user_group_list, user_group_regex, percentage
+    getter? active
 
     def initialize(
       name,

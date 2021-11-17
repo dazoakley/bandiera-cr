@@ -2,13 +2,13 @@ require "../spec_helper"
 require "../../src/bandiera/feature"
 
 Spectator.describe Bandiera::Feature do
-  let(:subject) { described_class.new(name: name, active: active) }
-  let(:name) { "feature_name" }
+  subject { described_class.new(name: name, active: active) }
+  let(name) { "feature_name" }
 
   describe "a plain on/off feature flag" do
     describe "#enabled?" do
       context "when it is 'active'" do
-        let(:active) { true }
+        let(active) { true }
 
         it "returns true" do
           expect(subject.enabled?).to eq(true)
@@ -16,7 +16,7 @@ Spectator.describe Bandiera::Feature do
       end
 
       context "when it is NOT 'active'" do
-        let(:active) { false }
+        let(active) { false }
 
         it "returns false" do
           expect(subject.enabled?).to eq(false)
@@ -27,7 +27,7 @@ Spectator.describe Bandiera::Feature do
 
   describe "a feature for specific user groups" do
     context "configured as a list of groups" do
-      let(:subject) do
+      subject do
         described_class.new(
           name: name,
           active: active,
@@ -35,11 +35,11 @@ Spectator.describe Bandiera::Feature do
         )
       end
 
-      let(:user_group) { "admin" }
-      let(:user_group_list) { %w(admin editor) }
+      let(user_group) { "admin" }
+      let(user_group_list) { %w(admin editor) }
 
       context "when the feature is 'active'" do
-        let(:active) { true }
+        let(active) { true }
 
         describe "#enabled?" do
           context "returns true" do
@@ -53,7 +53,7 @@ Spectator.describe Bandiera::Feature do
           end
 
           context "returns false" do
-            let(:user_group) { "guest" }
+            let(user_group) { "guest" }
 
             it "if the user_group is not in the list" do
               expect(subject.enabled?(user_group: user_group)).to eq(false)
@@ -67,7 +67,7 @@ Spectator.describe Bandiera::Feature do
       end
 
       context "when the feature is NOT 'active'" do
-        let(:active) { false }
+        let(active) { false }
 
         describe "#enabled?" do
           it "always returns false" do
@@ -77,8 +77,8 @@ Spectator.describe Bandiera::Feature do
       end
 
       context "when users have blank lines in their list of groups" do
-        let(:active) { true }
-        let(:user_group_list) { ["admin", "", "editor", ""] }
+        let(active) { true }
+        let(user_group_list) { ["admin", "", "editor", ""] }
 
         describe "enabled?" do
           it "ignores these values when considering the user_group" do
@@ -90,7 +90,7 @@ Spectator.describe Bandiera::Feature do
     end
 
     context "configured as a regex" do
-      let(:subject) do
+      subject do
         described_class.new(
           name: name,
           active: active,
@@ -98,11 +98,11 @@ Spectator.describe Bandiera::Feature do
         )
       end
 
-      let(:user_group) { "admin" }
-      let(:user_group_regex) { Regex.new("admin") }
+      let(user_group) { "admin" }
+      let(user_group_regex) { Regex.new("admin") }
 
       context "when the feature is 'active'" do
-        let(:active) { true }
+        let(active) { true }
 
         describe "#enabled?" do
           context "returns true" do
@@ -112,7 +112,7 @@ Spectator.describe Bandiera::Feature do
           end
 
           context "returns false" do
-            let(:user_group) { "guest" }
+            let(user_group) { "guest" }
 
             it "if the user_group does not match the regex" do
               expect(subject.enabled?(user_group: user_group)).to eq(false)
@@ -126,7 +126,7 @@ Spectator.describe Bandiera::Feature do
       end
 
       context "when the feature is NOT 'active'" do
-        let(:active) { false }
+        let(active) { false }
 
         describe "#enabled?" do
           it "always returns false" do
@@ -137,7 +137,7 @@ Spectator.describe Bandiera::Feature do
     end
 
     context "configured as a combination of exact matches and a regex" do
-      let(:subject) do
+      subject do
         described_class.new(
           name: name,
           active: active,
@@ -146,11 +146,11 @@ Spectator.describe Bandiera::Feature do
         )
       end
 
-      let(:user_group_list) { %w(editor) }
-      let(:user_group_regex) { Regex.new(".*admin") }
+      let(user_group_list) { %w(editor) }
+      let(user_group_regex) { Regex.new(".*admin") }
 
       context "when the feature is 'active'" do
-        let(:active) { true }
+        let(active) { true }
 
         describe "#enabled?" do
           context "returns true" do
@@ -176,7 +176,7 @@ Spectator.describe Bandiera::Feature do
       end
 
       context "when the feature is NOT 'active'" do
-        let(:active) { false }
+        let(active) { false }
 
         describe "#enabled?" do
           it "always returns false" do
@@ -188,7 +188,7 @@ Spectator.describe Bandiera::Feature do
   end
 
   describe "a feature for a percentage of users" do
-    let(:subject) do
+    subject do
       described_class.new(
         name: name,
         active: active,
@@ -197,10 +197,10 @@ Spectator.describe Bandiera::Feature do
     end
 
     context "when a feature is 'active'" do
-      let(:active) { true }
+      let(active) { true }
 
       context "with 5%" do
-        let(:percentage) { 5 }
+        let(percentage) { 5 }
 
         describe "#enabled?" do
           it "returns true for ~5% of users" do
@@ -210,7 +210,7 @@ Spectator.describe Bandiera::Feature do
       end
 
       context "with 95%" do
-        let(:percentage) { 95 }
+        let(percentage) { 95 }
 
         describe "#enabled?" do
           it "returns true for ~95% of users" do
@@ -221,7 +221,7 @@ Spectator.describe Bandiera::Feature do
       end
 
       context "when no user_id is passed" do
-        let(:percentage) { 95 }
+        let(percentage) { 95 }
 
         describe "#enabled?" do
           it "returns false" do
@@ -232,8 +232,8 @@ Spectator.describe Bandiera::Feature do
     end
 
     context "when the feature is NOT 'active'" do
-      let(:active) { false }
-      let(:percentage) { 95 }
+      let(active) { false }
+      let(percentage) { 95 }
 
       describe "#enabled?" do
         it "returns false" do
@@ -244,7 +244,7 @@ Spectator.describe Bandiera::Feature do
   end
 
   describe "a feature configured for both user groups and a percentage of users" do
-    let(:subject) do
+    subject do
       described_class.new(
         name: name,
         active: active,
@@ -254,11 +254,11 @@ Spectator.describe Bandiera::Feature do
     end
 
     context "when the feature is 'active'" do
-      let(:active) { true }
+      let(active) { true }
 
       context "and the user matches on the user_group configuration" do
-        let(:user_group_list) { %w(admin editor) }
-        let(:percentage) { 5 }
+        let(user_group_list) { %w(admin editor) }
+        let(percentage) { 5 }
 
         describe "#enabled?" do
           it "returns true" do
@@ -268,8 +268,8 @@ Spectator.describe Bandiera::Feature do
       end
 
       context "and the user does not match the user_groups, but does fall into the percentage" do
-        let(:user_group_list) { %w(admin editor) }
-        let(:percentage) { 100 }
+        let(user_group_list) { %w(admin editor) }
+        let(percentage) { 100 }
 
         describe "#enabled?" do
           it "returns true" do
@@ -279,8 +279,8 @@ Spectator.describe Bandiera::Feature do
       end
 
       context "and the user matches neither the user_groups or falls into the percentage" do
-        let(:user_group_list) { %w(admin editor) }
-        let(:percentage) { 0 }
+        let(user_group_list) { %w(admin editor) }
+        let(percentage) { 0 }
 
         describe "#enabled?" do
           it "returns false" do
@@ -290,8 +290,8 @@ Spectator.describe Bandiera::Feature do
       end
 
       context "when the user_group and/or user_id params are not passed" do
-        let(:user_group_list) { %w(admin editor) }
-        let(:percentage) { 100 }
+        let(user_group_list) { %w(admin editor) }
+        let(percentage) { 100 }
 
         describe "#enabled?" do
           it "returns false" do
@@ -302,9 +302,9 @@ Spectator.describe Bandiera::Feature do
     end
 
     context "when the feature is NOT 'active'" do
-      let(:active) { false }
-      let(:user_group_list) { %w(admin editor) }
-      let(:percentage) { 100 }
+      let(active) { false }
+      let(user_group_list) { %w(admin editor) }
+      let(percentage) { 100 }
 
       describe "#enabled?" do
         it "returns false" do
