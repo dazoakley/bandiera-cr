@@ -3,22 +3,25 @@ require "digest/crc32"
 module Bandiera
   struct Feature
     @name : String
+    @description : String
     @active : Bool
     @user_group_list : Array(String)
     @user_group_regex : Regex
     @percentage : Int32
 
-    getter name, active, user_group_list, user_group_regex, percentage
+    getter name, description, active, user_group_list, user_group_regex, percentage
     getter? active
 
     def initialize(
       name,
+      description,
       active = false,
       user_group_regex = Regex.new(""),
       user_group_list = [] of String,
       percentage = 1000
     )
       @name = name
+      @description = description
       @active = active
       @user_group_list = user_group_list
       @user_group_regex = user_group_regex

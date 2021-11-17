@@ -2,8 +2,9 @@ require "../spec_helper"
 require "../../src/bandiera/feature"
 
 Spectator.describe Bandiera::Feature do
-  subject { described_class.new(name: name, active: active) }
+  subject { described_class.new(name: name, description: description, active: active) }
   let(name) { "feature_name" }
+  let(description) { "feature description" }
 
   describe "a plain on/off feature flag" do
     describe "#enabled?" do
@@ -30,6 +31,7 @@ Spectator.describe Bandiera::Feature do
       subject do
         described_class.new(
           name: name,
+          description: description,
           active: active,
           user_group_list: user_group_list
         )
@@ -93,6 +95,7 @@ Spectator.describe Bandiera::Feature do
       subject do
         described_class.new(
           name: name,
+          description: description,
           active: active,
           user_group_regex: user_group_regex
         )
@@ -140,6 +143,7 @@ Spectator.describe Bandiera::Feature do
       subject do
         described_class.new(
           name: name,
+          description: description,
           active: active,
           user_group_list: user_group_list,
           user_group_regex: user_group_regex
@@ -191,6 +195,7 @@ Spectator.describe Bandiera::Feature do
     subject do
       described_class.new(
         name: name,
+        description: description,
         active: active,
         percentage: percentage
       )
@@ -247,6 +252,7 @@ Spectator.describe Bandiera::Feature do
     subject do
       described_class.new(
         name: name,
+        description: description,
         active: active,
         user_group_list: user_group_list,
         percentage: percentage
