@@ -1,4 +1,4 @@
-require "zlib"
+require "digest/crc32"
 
 module Bandiera
   struct Feature
@@ -18,11 +18,11 @@ module Bandiera
       user_group_list = [] of String,
       percentage = 1000
     )
-      @name             = name
-      @active           = active
-      @user_group_list  = user_group_list
+      @name = name
+      @active = active
+      @user_group_list = user_group_list
       @user_group_regex = user_group_regex
-      @percentage       = percentage
+      @percentage = percentage
     end
 
     def enabled?(user_group = "", user_id = "")
@@ -56,7 +56,7 @@ module Bandiera
 
     private def enabled_for_percentage?(user_id : String)
       return false unless configured_for_percentage? && !user_id.empty?
-      Zlib.crc32("#{name}-1_000_000-#{user_id}") % 100 < percentage
+      Digest::CRC32.checksum("#{name}-1_000_000-#{user_id}") % 100 < percentage
     end
   end
 end
