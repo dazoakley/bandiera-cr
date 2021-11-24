@@ -2,16 +2,15 @@ require "digest/crc32"
 
 module Bandiera
   struct Feature
-    @name : String
-    @description : String
-    @active : Bool
-    @user_group_list : Array(String)
-    @user_group_regex : Regex
-    @percentage : Int32
-    @start_time : Time
-    @end_time : Time
+    getter name : String
+    getter description : String
+    getter active : Bool
+    getter user_group_list : Array(String)
+    getter user_group_regex : Regex
+    getter percentage : Int32
+    getter start_time : Time
+    getter end_time : Time
 
-    getter name, description, active, user_group_list, user_group_regex, percentage, start_time, end_time
     getter? active
 
     def initialize(
