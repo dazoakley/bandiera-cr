@@ -20,3 +20,5 @@ jobs:
       run: shards install
     - name: Run tests
       run: crystal spec --rand
+    - name: Run ameba
+      run: ./bin/ameba
