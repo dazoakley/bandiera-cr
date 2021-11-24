@@ -9,7 +9,9 @@ Spectator.describe Bandiera::Feature do
       active: active,
       user_group_list: user_group_list,
       user_group_regex: user_group_regex,
-      percentage: percentage
+      percentage: percentage,
+      start_time: start_time,
+      end_time: end_time
     )
   end
 
@@ -18,6 +20,8 @@ Spectator.describe Bandiera::Feature do
   let(user_group_list) { nil }
   let(user_group_regex) { nil }
   let(percentage) { nil }
+  let(start_time) { nil }
+  let(end_time) { nil }
 
   describe "a plain on/off feature flag" do
     describe "#enabled?" do
@@ -25,7 +29,7 @@ Spectator.describe Bandiera::Feature do
         let(active) { true }
 
         it "returns true" do
-          expect(subject.enabled?).to eq(true)
+          expect(subject.enabled?).to eq true
         end
       end
 
@@ -33,7 +37,7 @@ Spectator.describe Bandiera::Feature do
         let(active) { false }
 
         it "returns false" do
-          expect(subject.enabled?).to eq(false)
+          expect(subject.enabled?).to eq false
         end
       end
     end
@@ -49,24 +53,24 @@ Spectator.describe Bandiera::Feature do
 
         describe "#enabled?" do
           context "returns true" do
-            it "if the user_group is in the list" do
-              expect(subject.enabled?(user_group: user_group)).to eq(true)
+            it "when the user_group is in the list" do
+              expect(subject.enabled?(user_group: user_group)).to eq true
             end
 
-            it "if the user_group is in the list regardless of case" do
-              expect(subject.enabled?(user_group: user_group.upcase)).to eq(true)
+            it "when the user_group is in the list regardless of case" do
+              expect(subject.enabled?(user_group: user_group.upcase)).to eq true
             end
           end
 
           context "returns false" do
             let(user_group) { "guest" }
 
-            it "if the user_group is not in the list" do
-              expect(subject.enabled?(user_group: user_group)).to eq(false)
+            it "when the user_group is not in the list" do
+              expect(subject.enabled?(user_group: user_group)).to eq false
             end
 
-            it "if no user_group argument was passed" do
-              expect(subject.enabled?).to eq(false)
+            it "when no user_group argument was passed" do
+              expect(subject.enabled?).to eq false
             end
           end
         end
@@ -88,8 +92,8 @@ Spectator.describe Bandiera::Feature do
 
         describe "enabled?" do
           it "ignores these values when considering the user_group" do
-            expect(subject.enabled?(user_group: "admin")).to eq(true)
-            expect(subject.enabled?(user_group: "")).to eq(false)
+            expect(subject.enabled?(user_group: "admin")).to eq true
+            expect(subject.enabled?(user_group: "")).to eq false
           end
         end
       end
@@ -113,20 +117,20 @@ Spectator.describe Bandiera::Feature do
 
         describe "#enabled?" do
           context "returns true" do
-            it "if the user_group matches the regex" do
-              expect(subject.enabled?(user_group: user_group)).to eq(true)
+            it "when the user_group matches the regex" do
+              expect(subject.enabled?(user_group: user_group)).to eq true
             end
           end
 
           context "returns false" do
             let(user_group) { "guest" }
 
-            it "if the user_group does not match the regex" do
-              expect(subject.enabled?(user_group: user_group)).to eq(false)
+            it "when the user_group does not match the regex" do
+              expect(subject.enabled?(user_group: user_group)).to eq false
             end
 
-            it "if no user_group argument was passed" do
-              expect(subject.enabled?).to eq(false)
+            it "when no user_group argument was passed" do
+              expect(subject.enabled?).to eq false
             end
           end
         end
@@ -137,7 +141,7 @@ Spectator.describe Bandiera::Feature do
 
         describe "#enabled?" do
           it "always returns false" do
-            expect(subject.enabled?(user_group: user_group)).to eq(false)
+            expect(subject.enabled?(user_group: user_group)).to eq false
           end
         end
       end
@@ -162,22 +166,22 @@ Spectator.describe Bandiera::Feature do
 
         describe "#enabled?" do
           context "returns true" do
-            it "if the user_group is in the exact match list but does not match the regex" do
-              expect(subject.enabled?(user_group: "editor")).to eq(true)
+            it "when the user_group is in the exact match list but does not match the regex" do
+              expect(subject.enabled?(user_group: "editor")).to eq true
             end
 
-            it "if the user_group matches the regex but is not in the exact match list" do
-              expect(subject.enabled?(user_group: "super_admin")).to eq(true)
+            it "when the user_group matches the regex but is not in the exact match list" do
+              expect(subject.enabled?(user_group: "super_admin")).to eq true
             end
           end
 
           context "returns false" do
-            it "if the user_group is not in the exact match list and does not match the regex" do
-              expect(subject.enabled?(user_group: "guest")).to eq(false)
+            it "when the user_group is not in the exact match list and does not match the regex" do
+              expect(subject.enabled?(user_group: "guest")).to eq false
             end
 
-            it "if no user_group argument was passed" do
-              expect(subject.enabled?).to eq(false)
+            it "when no user_group argument was passed" do
+              expect(subject.enabled?).to eq false
             end
           end
         end
@@ -188,7 +192,7 @@ Spectator.describe Bandiera::Feature do
 
         describe "#enabled?" do
           it "always returns false" do
-            expect(subject.enabled?(user_group: "editor")).to eq(false)
+            expect(subject.enabled?(user_group: "editor")).to eq false
           end
         end
       end
@@ -225,7 +229,7 @@ Spectator.describe Bandiera::Feature do
 
         describe "#enabled?" do
           it "returns false" do
-            expect(subject.enabled?).to eq(false)
+            expect(subject.enabled?).to eq false
           end
         end
       end
@@ -253,7 +257,7 @@ Spectator.describe Bandiera::Feature do
 
         describe "#enabled?" do
           it "returns true" do
-            expect(subject.enabled?(user_group: "admin", user_id: "12345")).to eq(true)
+            expect(subject.enabled?(user_group: "admin", user_id: "12345")).to eq true
           end
         end
       end
@@ -264,7 +268,7 @@ Spectator.describe Bandiera::Feature do
 
         describe "#enabled?" do
           it "returns true" do
-            expect(subject.enabled?(user_group: "qwerty", user_id: "12345")).to eq(true)
+            expect(subject.enabled?(user_group: "qwerty", user_id: "12345")).to eq true
           end
         end
       end
@@ -275,7 +279,7 @@ Spectator.describe Bandiera::Feature do
 
         describe "#enabled?" do
           it "returns false" do
-            expect(subject.enabled?(user_group: "qwerty", user_id: "12345")).to eq(false)
+            expect(subject.enabled?(user_group: "qwerty", user_id: "12345")).to eq false
           end
         end
       end
@@ -286,7 +290,7 @@ Spectator.describe Bandiera::Feature do
 
         describe "#enabled?" do
           it "returns false" do
-            expect(subject.enabled?).to eq(false)
+            expect(subject.enabled?).to eq false
           end
         end
       end
@@ -299,8 +303,124 @@ Spectator.describe Bandiera::Feature do
 
       describe "#enabled?" do
         it "returns false" do
-          expect(subject.enabled?(user_group: "admin", user_id: "12345")).to eq(false)
+          expect(subject.enabled?(user_group: "admin", user_id: "12345")).to eq false
         end
+      end
+    end
+  end
+
+  describe "a feature for a time range" do
+    let(active) { true }
+
+    context "when only start_time is set" do
+      let(start_time) { Time.utc(2021, 1, 1) }
+
+      context "when the current date/time is after the start_time" do
+        describe "#enabled?" do
+          it "returns true" do
+            Timecop.freeze(Time.utc(2021, 1, 10)) do
+              expect(subject.enabled?).to eq true
+            end
+          end
+        end
+      end
+
+      context "when the current date/time is before the start_time" do
+        describe "#enabled?" do
+          it "returns false" do
+            Timecop.freeze(Time.utc(2020, 12, 10)) do
+              expect(subject.enabled?).to eq false
+            end
+          end
+        end
+      end
+    end
+
+    context "when only end_time is set" do
+      let(end_time) { Time.utc(2021, 2, 1) }
+
+      context "when the current date/time is before the end_time" do
+        describe "#enabled?" do
+          it "returns true" do
+            Timecop.freeze(Time.utc(2021, 1, 1)) do
+              expect(subject.enabled?).to eq true
+            end
+          end
+        end
+      end
+
+      context "when the current date/time is after the end_time" do
+        describe "#enabled?" do
+          it "returns false" do
+            Timecop.freeze(Time.utc(2021, 2, 10)) do
+              expect(subject.enabled?).to eq false
+            end
+          end
+        end
+      end
+    end
+
+    context "when the current date/time is in the set range" do
+      let(start_time) { Time.utc(2021, 1, 1) }
+      let(end_time) { Time.utc(2021, 2, 1) }
+
+      describe "#enabled?" do
+        it "returns true" do
+          Timecop.freeze(Time.utc(2021, 1, 10)) do
+            expect(subject.enabled?).to eq true
+          end
+        end
+      end
+    end
+
+    context "when the current date/time is outside the set range" do
+      let(start_time) { Time.utc(2021, 1, 1) }
+      let(end_time) { Time.utc(2021, 2, 1) }
+
+      describe "#enabled?" do
+        it "returns false" do
+          Timecop.freeze(Time.utc(2021, 2, 10)) do
+            expect(subject.enabled?).to eq false
+          end
+        end
+      end
+    end
+  end
+
+  describe "#configured_for_time_range?" do
+    let(active) { true }
+
+    context "when the end_time is before the start_time" do
+      let(start_time) { Time.utc(2021, 2, 1) }
+      let(end_time) { Time.utc(2021, 1, 1) }
+
+      it "returns false" do
+        expect(subject.configured_for_time_range?).to eq false
+      end
+    end
+
+    context "when only start_time is set" do
+      let(start_time) { Time.utc(2021, 2, 1) }
+
+      it "returns true" do
+        expect(subject.configured_for_time_range?).to eq true
+      end
+    end
+
+    context "when only end_time is set" do
+      let(end_time) { Time.utc(2021, 2, 1) }
+
+      it "returns true" do
+        expect(subject.configured_for_time_range?).to eq true
+      end
+    end
+
+    context "when the time range is valid" do
+      let(start_time) { Time.utc(2021, 1, 1) }
+      let(end_time) { Time.utc(2021, 2, 1) }
+
+      it "returns true" do
+        expect(subject.configured_for_time_range?).to eq true
       end
     end
   end
@@ -310,7 +430,7 @@ Spectator.describe Bandiera::Feature do
     let(user_group_list) { nil }
     let(user_group_regex) { nil }
 
-    context "if a user_group list have been configured" do
+    context "when a user_group list have been configured" do
       let(user_group_list) { %w(boo bar) }
 
       it "returns true" do
@@ -318,7 +438,7 @@ Spectator.describe Bandiera::Feature do
       end
     end
 
-    context "if a user_group regex have been configured" do
+    context "when a user_group regex have been configured" do
       let(user_group_regex) { Regex.new(".*") }
 
       it "returns true" do
@@ -326,7 +446,7 @@ Spectator.describe Bandiera::Feature do
       end
     end
 
-    context "if no user_group settings have been configured" do
+    context "when no user_group settings have been configured" do
       it "returns false" do
         expect(subject.configured_for_user_groups?).to eq false
       end
@@ -337,7 +457,7 @@ Spectator.describe Bandiera::Feature do
     let(active) { true }
     let(percentage) { nil }
 
-    context "if a percentage has been configured" do
+    context "when a percentage has been configured" do
       let(percentage) { 50 }
 
       it "returns true" do
@@ -345,7 +465,7 @@ Spectator.describe Bandiera::Feature do
       end
     end
 
-    context "if a percentage has not been configured" do
+    context "when a percentage has not been configured" do
       it "returns false" do
         expect(subject.configured_for_percentage?).to be_false
       end

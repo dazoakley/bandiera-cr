@@ -8,3 +8,7 @@ shards:
     git: https://gitlab.com/arctic-fox/spectator.git
     version: 0.10.2
 
+  timecop:
+    git: https://github.com/crystal-community/timecop.cr.git
+    version: 0.4.1
+
