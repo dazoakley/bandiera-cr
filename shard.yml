@@ -4,6 +4,16 @@ version: 0.1.0
 authors:
   - Darren Oakley <daz.oakley@gmail.com>
 
+dependencies:
+  pg:
+    github: will/crystal-pg
+  jennifer:
+    github: imdrasil/jennifer.cr
+    version: "~> 0.11.1"
+  sam:
+    github: imdrasil/sam.cr
+    version: 0.4.2
+
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba

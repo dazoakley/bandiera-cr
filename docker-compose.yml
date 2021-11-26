@@ -1,0 +1,19 @@
+version: "2"
+services:
+  # app:
+  #   build: .
+  #   ports:
+  #     - "5000:5000"
+  #   environment:
+  #     DATABASE_URL: postgres://bandiera:bandiera@db/bandiera
+  #   links:
+  #     - db
+
+  db:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: bandiera
+      POSTGRES_USER: bandiera
+      POSTGRES_PASSWORD: bandiera
